@@ -1,0 +1,120 @@
+@startuml bookmark_database_erd
+
+' Styling
+skinparam linetype ortho
+skinparam class {
+    BackgroundColor White
+    ArrowColor Black
+    BorderColor Black
+}
+
+' Entities
+entity "Users" {
+    *user_id : int <<PK>>
+    --
+    username : varchar
+    email : varchar
+    password_hash : varchar
+    profile_picture : varchar
+    realname : varchar
+    created_at : timestamp
+    updated_at : timestamp
+}
+
+entity "Content" {
+    *content_id : int <<PK>>
+    --
+    title : varchar
+    description : text
+    author : varchar
+    cover_image_url : varchar
+    content_type : varchar
+    category : varchar
+    duration : int
+    file_url : varchar
+    created_at : timestamp
+    updated_at : timestamp
+}
+
+entity "Rating_Reviews" {
+    *rating_id : int <<PK>>
+    --
+    user_id : int <<FK>>
+    content_id : int <<FK>>
+    rating : int
+    review_text : text
+    created_at : timestamp
+}
+
+entity "Downloads" {
+    *download_id : int <<PK>>
+    --
+    user_id : int <<FK>>
+    content_id : int <<FK>>
+    download_date : timestamp
+    expiration_date : timestamp
+}
+
+entity "Podcast_Episodes" {
+    *episode_id : int <<PK>>
+    --
+    content_id : int <<FK>>
+    episode_title : varchar
+    episode_number : int
+    duration : int
+    audio_file_url : varchar
+    release_date : timestamp
+}
+
+entity "Book_Marks" {
+    *bookmark_id : int <<PK>>
+    --
+    user_id : int <<FK>>
+    content_id : int <<FK>>
+    position : int
+    created_at : timestamp
+}
+
+entity "Playback_History" {
+    *history_id : int <<PK>>
+    --
+    user_id : int <<FK>>
+    content_id : int <<FK>>
+    start_time : timestamp
+    end_time : timestamp
+    position : int
+    playback_speed : float
+}
+
+entity "Content_Genres_Categories" {
+    *category_id : int <<PK>>
+    --
+    name : varchar
+    description : text
+}
+
+entity "Admin_Content_Management" {
+    *admin_id : int <<PK>>
+    --
+    username : varchar
+    password_hash : varchar
+    email : varchar
+    role : varchar
+    created_at : timestamp
+    updated_at : timestamp
+}
+
+' Relationships
+Users ||--o{ Rating_Reviews
+Users ||--o{ Downloads
+Users ||--o{ Book_Marks
+Users ||--o{ Playback_History
+
+Content ||--o{ Rating_Reviews
+Content ||--o{ Downloads
+Content ||--o{ Book_Marks
+Content ||--o{ Playback_History
+Content ||--o{ Podcast_Episodes
+Content }o--|| Content_Genres_Categories
+
+@enduml
