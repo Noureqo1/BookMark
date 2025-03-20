@@ -3,6 +3,14 @@
 ## Overview
 This document describes the database structure for the BookMark application, a content management system designed for managing books, podcasts, and other media content.
 
+## Database Photos
+
+### ERD
+![ERD](./ERD.jpg)
+
+### Database.puml
+![Database.puml](./database_puml.png)
+
 ## Entity Descriptions
 
 ### Users
@@ -105,11 +113,4 @@ Manages administrative users and permissions.
 3. **Content to Content_Genres_Categories** (Many-to-One):
    - Content belongs to one category
 
-## Database Photos
-
-### ERD
-![ERD](./ERD.jpg)
-
-### Database.puml
-![Database.puml](./database_puml.png)
-
+##
