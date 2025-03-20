@@ -2,7 +2,7 @@
 
 ## Introduction
 
-BookMark is a modern web application designed to help students or any one intrested in lerning anew skill . The platform offer users plenty of free audio book and audio courses to learn from also allaws them to track books they're currently reading, maintain a wishlist of books they want to read, and keep a record of completed books, Bookmark also offers podcasts and kids content making it a one stop shop for all your learning needs. BookMark enhances the reading experience by making it more engaging and organized.
+BookMark is a modern web application designed to help students or any one intrested in lerning a new skill . The platform offer users plenty of free audio book and audio courses to learn from also allaws them to track books they're currently reading, maintain a wishlist of books they want to read, and keep a record of completed books, Bookmark also offers podcasts and kids content making it a one stop shop for all your learning needs. BookMark enhances the reading experience by making it more engaging and organized.
 
 ## Wireframe Documentation
 
