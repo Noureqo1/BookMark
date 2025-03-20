@@ -2,7 +2,7 @@
 
 ## Introduction
 
-BookMark is a modern web application designed to help users organize and manage their reading journey. The platform allows users to track books they're currently reading, maintain a wishlist of books they want to read, and keep a record of completed books. With features like progress tracking, notes, and reading statistics, BookMark makes the reading experience more engaging and organized.
+BookMark is a modern web application designed to help students or any one intrested in lerning anew skill . The platform offer users plenty of free audio book and audio courses to learn from also allaws them to track books they're currently reading, maintain a wishlist of books they want to read, and keep a record of completed books, Bookmark also offers podcasts and kids content making it a one stop shop for all your learning needs. BookMark enhances the reading experience by making it more engaging and organized.
 
 ## Wireframe Documentation
 
@@ -23,12 +23,12 @@ BookMark is a modern web application designed to help users organize and manage 
   - Quick access to book collections
   - Reading statistics
 
-### 3. Book Collection
+### 3. my library
 - **Purpose**: Manages different book lists
 - **Key Features**:
-  - Currently Reading shelf
-  - Want to Read shelf
-  - Completed Books shelf
+  - Currently Reading library
+  - Want to Read library
+  - Completed Books library
   - Filter and sort options
   - Book cards with cover images and basic info
 
@@ -38,16 +38,13 @@ BookMark is a modern web application designed to help users organize and manage 
   - Book cover and metadata
   - Reading progress tracker
   - Notes section
-  - Reading status toggle
   - Rating and review system
 
-### 5. Profile Page
-- **Purpose**: User's personal space and settings
+### 5. Comment Page
+- **Purpose**: User's can comment on books
 - **Key Features**:
-  - Reading statistics and achievements
-  - Profile information
-  - Reading preferences
-  - Account settings
+- Allows users to type and submit comments.
+- Users can reply to existing comments.
 
 ## Wireframe Photos
 
@@ -72,11 +69,11 @@ You can view the detailed design on Figma using the following link:
 ## Design System
 
 ### Color Palette
-- Primary: [Add primary color]
-- Secondary: [Add secondary color]
-- Accent: [Add accent color]
-- Background: [Add background color]
-- Text: [Add text colors]
+- Primary: [black]
+- Secondary: [green]
+- Accent: [black] & [white]
+- Background: [white]
+- Text: [black]
 
 ### Typography
 - Headings: [Add heading font]
