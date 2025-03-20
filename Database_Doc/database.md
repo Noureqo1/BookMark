@@ -6,10 +6,10 @@ This document describes the database structure for the BookMark application, a c
 ## Database Photos
 
 ### ERD
-![ERD](./ERD.jpg)
+![ERD](./pics/ERD.jpg)
 
 ### Database.puml
-![Database.puml](./database_puml.png)
+![Database.puml](./pics/database_puml.png)
 
 ## Entity Descriptions
 

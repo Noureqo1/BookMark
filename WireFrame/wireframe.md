@@ -49,16 +49,16 @@ BookMark is a modern web application designed to help students or any one intres
 ## Wireframe Photos
 
 ### Home Page
-![Home Page Wireframe](./Home.png)
+![Home Page Wireframe](./pics/Home.png)
 
 ### Books Collection
-![Books Collection Wireframe](./Books.png)
+![Books Collection Wireframe](./pics/Books.png)
 
 ### Login Page
-![Login Page Wireframe](./Login.png)
+![Login Page Wireframe](./pics/Login.png)
 
 ### Signup Page
-![Signup Page Wireframe](./Signup.png)
+![Signup Page Wireframe](./pics/Signup.png)
 
 ## Figma Design
 
