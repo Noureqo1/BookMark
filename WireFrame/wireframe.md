@@ -54,6 +54,9 @@ BookMark is a modern web application designed to help students or any one intres
 ### Books Collection
 ![Books Collection Wireframe](./pics/Books.png)
 
+### Comments Page
+![Books Collection Wireframe](./pics/comments.png)
+
 ### Login Page
 ![Login Page Wireframe](./pics/Login.png)
 
