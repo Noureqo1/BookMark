@@ -47,4 +47,7 @@ build/
 coverage/
 
 # nyc test coverage
+<<<<<<< HEAD
 .nyc_output/
+
+
