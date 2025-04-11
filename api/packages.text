@@ -1,0 +1,2 @@
+npm install bcryptjs dotenv express express-async-handler jsonwebtoken mongoose morgan concurrently nodemon
+npm install @heroicons/react @headlessui/react axios react-router-dom tailwindcss postcss autoprefixer react-h5-audio-player
