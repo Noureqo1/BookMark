@@ -1,15 +1,14 @@
 import React, { useState } from 'react';
-import api from '../../utils/api';
 
-const BookForm = ({ onClose, onSave, book = null }) => {
-  const [title, setTitle] = useState(book?.title || '');
-  const [author, setAuthor] = useState(book?.author || '');
-  const [description, setDescription] = useState(book?.description || '');
-  const [coverImage, setCoverImage] = useState(book?.coverImage || '');
-  const [audioFile, setAudioFile] = useState(book?.audioFile || '');
-  const [category, setCategory] = useState(book?.category || 'audiobook');
-  const [duration, setDuration] = useState(book?.duration || 0);
-  const [genre, setGenre] = useState(book?.genre?.[0] || '');
+const BookForm = ({ initialBook, onSubmit }) => {
+  const [title, setTitle] = useState(initialBook?.title || '');
+  const [author, setAuthor] = useState(initialBook?.author || '');
+  const [description, setDescription] = useState(initialBook?.description || '');
+  const [coverImage, setCoverImage] = useState(initialBook?.coverImage || '');
+  const [audioFile, setAudioFile] = useState(initialBook?.audioFile || '');
+  const [category, setCategory] = useState(initialBook?.category || 'audiobook');
+  const [duration, setDuration] = useState(initialBook?.duration || '');
+  const [genre, setGenre] = useState(initialBook?.genre?.[0] || '');
   const [error, setError] = useState(null);
 
   const handleSubmit = async (e) => {
@@ -29,18 +28,35 @@ const BookForm = ({ onClose, onSave, book = null }) => {
 
     try {
       let response;
-      if (book) {
-        response = await api.patch(`/books/${book._id}`, bookData);
+      if (initialBook) {
+        response = await fetch(`http://localhost:9000/api/books/${initialBook._id}`, {
+          method: 'PATCH',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${localStorage.getItem('token')}`
+          },
+          body: JSON.stringify(bookData)
+        });
       } else {
-        response = await api.post('/books', bookData);
+        response = await fetch('http://localhost:9000/api/books', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${localStorage.getItem('token')}`
+          },
+          body: JSON.stringify(bookData)
+        });
       }
 
-      if (response.status === 200 || response.status === 201) {
-        onSave(response.data);
+      if (!response.ok) {
+        throw new Error('Failed to save book');
       }
+
+      const data = await response.json();
+      onSubmit();
     } catch (err) {
       console.error('Error submitting book:', err);
-      setError(err.response?.data?.error || err.message || 'Failed to submit book');
+      setError(err.message || 'Failed to save book');
     }
   };
 
@@ -123,7 +139,7 @@ const BookForm = ({ onClose, onSave, book = null }) => {
         type="submit"
         className="w-full bg-blue-500 text-white p-2 rounded hover:bg-blue-600"
       >
-        {book ? 'Update Book' : 'Add Book'}
+        {initialBook ? 'Update Book' : 'Add Book'}
       </button>
     </form>
   );
