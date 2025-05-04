@@ -11,7 +11,7 @@ function Home() {
         <div className="relative pt-16 pb-32">
           <div className="container mx-auto px-4 text-center">
             <img
-              src="/assets/alt_Log.png"
+              src="/assets/Logo.png"
               alt="BookMark Alt Logo"
               className="h-24 mx-auto mb-8"
             />
