@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
-import { Book, LogOut, User, Home, Settings } from 'lucide-react';
+import { Book, LogOut, User, Home, Settings, Download } from 'lucide-react';
 
 const Navbar = () => {
   const navigate = useNavigate();
@@ -73,6 +73,20 @@ const Navbar = () => {
                 <span className="flex items-center gap-2">
                   <Book className="h-4 w-4" />
                   Books
+                </span>
+              </Link>
+
+              <Link
+                to="/downloads"
+                className={`px-4 py-2 rounded-lg transition-all duration-200 font-medium ${
+                  isActive('/downloads')
+                    ? 'bg-amber-400/20 text-amber-400'
+                    : 'text-gray-100 hover:bg-gray-700/50 hover:text-amber-300'
+                }`}
+              >
+                <span className="flex items-center gap-2">
+                  <Download className="h-4 w-4" />
+                  Downloads
                 </span>
               </Link>
 

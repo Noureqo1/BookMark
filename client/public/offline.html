@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BookMark - Offline</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+            background-color: #0F172A;
+            color: #E2E8F0;
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+        }
+        .container {
+            max-width: 600px;
+            padding: 2rem;
+        }
+        h1 {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+            color: #60A5FA;
+        }
+        p {
+            font-size: 1.1rem;
+            line-height: 1.6;
+            margin-bottom: 1.5rem;
+            color: #94A3B8;
+        }
+        .icon {
+            font-size: 4rem;
+            margin-bottom: 2rem;
+            color: #60A5FA;
+        }
+        .button {
+            background-color: #2563EB;
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border-radius: 0.5rem;
+            text-decoration: none;
+            font-weight: 500;
+            transition: background-color 0.2s;
+        }
+        .button:hover {
+            background-color: #1D4ED8;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="icon">📚</div>
+        <h1>You're Offline</h1>
+        <p>Don't worry! You can still access your downloaded books and continue listening to your audiobooks.</p>
+        <p>To view new books or download more content, please check your internet connection and try again.</p>
+        <a href="/" class="button">Go to Home</a>
+    </div>
+    <script>
+        // Check if we're back online
+        window.addEventListener('online', () => {
+            window.location.reload();
+        });
+    </script>
+</body>
+</html>

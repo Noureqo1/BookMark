@@ -1,5 +1,6 @@
 const express = require('express');
 const router = express.Router();
+const Review = require('../models/Review');
 const Book = require('../models/books');
 const { auth, isAdmin } = require('../middleware/auth');
 
@@ -88,27 +89,34 @@ router.delete('/:id', auth, isAdmin, async (req, res) => {
 
 // User interactions
 // Add review
-router.post('/:id/reviews', auth, async (req, res) => {
+router.post('/:id/reviews', async (req, res) => {
   try {
     const book = await Book.findById(req.params.id);
     if (!book) {
       return res.status(404).json({ error: 'Book not found' });
     }
 
-    const review = {
-      user: req.user._id,
+    const review = new Review({
+      book: req.params.id,
       rating: req.body.rating,
-      comment: req.body.comment
-    };
+      comment: req.body.comment,
+      userName: req.user ? req.user.name : 'Anonymous User',
+      user: req.user ? req.user._id : null
+    });
 
-    book.reviews.push(review);
-    
-    // Update average rating
-    const totalRating = book.reviews.reduce((sum, item) => sum + item.rating, 0);
-    book.rating = totalRating / book.reviews.length;
+    await review.save();
 
-    await book.save();
-    res.status(201).json(book);
+    // Update book's average rating
+    const reviews = await Review.find({ book: req.params.id });
+    const totalRating = reviews.reduce((sum, item) => sum + item.rating, 0);
+    const averageRating = totalRating / reviews.length;
+
+    await Book.findByIdAndUpdate(req.params.id, { 
+      averageRating,
+      reviewCount: reviews.length
+    });
+
+    res.status(201).json(review);
   } catch (error) {
     res.status(400).json({ error: error.message });
   }

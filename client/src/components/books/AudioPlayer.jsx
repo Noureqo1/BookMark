@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import AudioPlayer from 'react-h5-audio-player';
 import 'react-h5-audio-player/lib/styles.css';
 
-const AudioBookPlayer = ({ audioUrl, onProgress }) => {
+const AudioBookPlayer = ({ audioUrl, bookId, onProgress }) => {
   useEffect(() => {
     console.log('AudioPlayer received URL:', audioUrl);
   }, [audioUrl]);
@@ -12,7 +12,7 @@ const AudioBookPlayer = ({ audioUrl, onProgress }) => {
   }
 
   return (
-    <div className="w-full">
+    <div className="w-full space-y-4">
       <AudioPlayer
         autoPlay={false}
         src={audioUrl}

@@ -1,8 +1,27 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { BookOpen, Star, Clock, Headphones } from 'lucide-react';
+import { BookOpen, Star, Clock, Headphones, Download } from 'lucide-react';
+import useOfflineStorage from '../../hooks/useOfflineStorage';
+import StarRating from '../reviews/StarRating';
 
 const BookCard = ({ book }) => {
+  const { downloadBook, isBookDownloaded, isDownloading } = useOfflineStorage();
+  const downloaded = isBookDownloaded(book._id);
+  const downloading = isDownloading(book._id);
+
+  const handleDownload = async (e) => {
+    e.preventDefault();
+    try {
+      if (!book.audioFile) {
+        throw new Error('No audio file available');
+      }
+      await downloadBook(book._id, book.audioFile);
+    } catch (error) {
+      console.error('Failed to download:', error);
+      alert(error.message || 'Failed to download book');
+    }
+  };
+
   return (
     <div className="group bg-white rounded-xl shadow-sm hover:shadow-lg transition-all duration-300 overflow-hidden h-full flex flex-col transform hover:-translate-y-1">
       <div className="relative aspect-[3/4] overflow-hidden">
@@ -27,6 +46,27 @@ const BookCard = ({ book }) => {
               <BookOpen className="h-4 w-4 mr-2" />
               View Details
             </Link>
+            <button
+              onClick={handleDownload}
+              disabled={downloading || downloaded}
+              className={`w-full font-medium py-2 rounded-lg flex items-center justify-center transition-colors duration-200 ${
+                downloading ? 'bg-gray-400 cursor-wait' :
+                downloaded ? 'bg-green-500 text-white cursor-not-allowed' : 
+                'bg-blue-500 hover:bg-blue-600 text-white'
+              }`}
+            >
+              {downloading ? (
+                <>
+                  <div className="h-4 w-4 mr-2 animate-spin rounded-full border-2 border-white border-t-transparent" />
+                  <span>Downloading...</span>
+                </>
+              ) : (
+                <>
+                  <Download className="h-4 w-4 mr-2" />
+                  <span>{downloaded ? 'Downloaded' : 'Download'}</span>
+                </>
+              )}
+            </button>
           </div>
         </div>
         
@@ -44,9 +84,15 @@ const BookCard = ({ book }) => {
             <Star className="h-3.5 w-3.5 text-amber-500 fill-amber-500" />
             <span className="ml-1 text-xs font-semibold text-amber-700">{book.rating.toFixed(1)}</span>
           </div>
-          <div className="flex items-center text-gray-500">
-            <Clock className="h-3.5 w-3.5 mr-1" />
-            <span className="text-xs">{book.duration}</span>
+          <div className="flex items-center gap-2 text-sm">
+            <div className="flex items-center gap-1">
+              <StarRating rating={book.averageRating || 0} readOnly size="sm" />
+              <span className="text-yellow-600">({book.reviewCount || 0})</span>
+            </div>
+            <div className="flex items-center gap-1">
+              <Clock className="h-4 w-4" />
+              <span>{Math.round(book.duration / 60)} min</span>
+            </div>
           </div>
         </div>
         

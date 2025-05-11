@@ -1,6 +1,9 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { useParams } from 'react-router-dom';
 import AudioBookPlayer from '../components/books/AudioPlayer';
+import ReviewForm from '../components/reviews/ReviewForm';
+import ReviewList from '../components/reviews/ReviewList';
+import StarRating from '../components/reviews/StarRating';
 import api from '../utils/api';
 
 const Player = () => {
@@ -8,6 +11,9 @@ const Player = () => {
   const [book, setBook] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [reviews, setReviews] = useState([]);
+  const [reviewsLoading, setReviewsLoading] = useState(false);
+  const [reviewsError, setReviewsError] = useState(null);
 
   const fetchBook = useCallback(async () => {
     try {
@@ -32,9 +38,26 @@ const Player = () => {
     }
   }, [bookId]);
 
+  const fetchReviews = useCallback(async () => {
+    try {
+      setReviewsLoading(true);
+      const response = await api.get(`/books/${bookId}/reviews`);
+      if (response.status !== 200) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      setReviews(response.data);
+    } catch (err) {
+      console.error('Error fetching reviews:', err);
+      setReviewsError(err.message || 'Failed to fetch reviews');
+    } finally {
+      setReviewsLoading(false);
+    }
+  }, [bookId]);
+
   useEffect(() => {
     fetchBook();
-  }, [fetchBook, bookId]);
+    fetchReviews();
+  }, [fetchBook, fetchReviews, bookId]);
 
   const handleProgress = useCallback(async (currentTime) => {
     try {
@@ -77,6 +100,7 @@ const Player = () => {
           <div className="space-y-8">
             <div className="bg-gray-800 rounded-lg p-6">
               <AudioBookPlayer
+                bookId={bookId}
                 audioUrl={book.audioFile}
                 onProgress={handleProgress}
               />
@@ -98,6 +122,42 @@ const Player = () => {
               >
                 Repeat Book
               </button>
+            </div>
+          </div>
+        </div>
+        
+        {/* Reviews Section */}
+        <div className="max-w-4xl mx-auto mt-12">
+          <div className="bg-gray-800 rounded-lg p-6 mb-6">
+            <div className="flex justify-between items-center mb-6">
+              <h2 className="text-2xl font-bold">Reviews & Ratings</h2>
+              <div className="flex items-center">
+                <div className="flex items-center mr-2">
+                  <StarRating 
+                    rating={book.averageRating || 0} 
+                    readOnly={true} 
+                    size="md" 
+                  />
+                </div>
+                <span className="text-xl font-semibold">
+                  {book.averageRating ? book.averageRating.toFixed(1) : '0.0'}
+                </span>
+                <span className="text-gray-400 ml-1">({reviews.length} reviews)</span>
+              </div>
+            </div>
+            
+            <ReviewForm 
+              bookId={bookId} 
+              onReviewSubmitted={fetchReviews} 
+            />
+            
+            <div className="mt-8">
+              <h3 className="text-xl font-semibold mb-4">User Reviews</h3>
+              <ReviewList 
+                reviews={reviews} 
+                isLoading={reviewsLoading} 
+                error={reviewsError} 
+              />
             </div>
           </div>
         </div>
