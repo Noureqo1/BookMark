@@ -7,8 +7,13 @@ const { auth } = require('../middleware/auth');
 // Register
 router.post('/register', async (req, res) => {
   try {
-    const { username, email, password } = req.body;
-    const user = new User({ username, email, password });
+    const { username, email, password, name } = req.body;
+    const user = new User({ 
+      username, 
+      email, 
+      password,
+      name: name || username
+    });
     await user.save();
     
     const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {

@@ -45,6 +45,8 @@ const Player = () => {
       if (response.status !== 200) {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
+      // For debugging
+      console.log('Reviews from API:', response.data);
       setReviews(response.data);
     } catch (err) {
       console.error('Error fetching reviews:', err);
@@ -55,9 +57,30 @@ const Player = () => {
   }, [bookId]);
 
   useEffect(() => {
-    fetchBook();
-    fetchReviews();
+    const loadData = async () => {
+      try {
+        await fetchBook();
+        await fetchReviews();
+      } catch (error) {
+        console.error('Error loading data:', error);
+      }
+    };
+    loadData();
   }, [fetchBook, fetchReviews, bookId]);
+
+  const handleReviewSubmitted = useCallback(async () => {
+    try {
+      // First fetch the book to get updated ratings
+      await fetchBook();
+      // Then fetch reviews to show the new review
+      await fetchReviews();
+      
+      // Force a re-render of the book data
+      setBook(prevBook => ({ ...prevBook }));
+    } catch (error) {
+      console.error('Error refreshing data:', error);
+    }
+  }, [fetchBook, fetchReviews]);
 
   const handleProgress = useCallback(async (currentTime) => {
     try {
@@ -148,7 +171,7 @@ const Player = () => {
             
             <ReviewForm 
               bookId={bookId} 
-              onReviewSubmitted={fetchReviews} 
+              onReviewSubmitted={handleReviewSubmitted} 
             />
             
             <div className="mt-8">

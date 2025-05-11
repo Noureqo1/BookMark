@@ -8,18 +8,22 @@ const urlsToCache = [
   '/',
   '/index.html',
   '/manifest.json',
-  '/favicon.ico',
-  '/static/js/main.js',
-  '/static/css/main.css'
+  '/favicon.ico'
 ];
 
 self.addEventListener('install', (event) => {
   console.log('Service Worker installing...');
   event.waitUntil(
     Promise.all([
-      caches.open(STATIC_CACHE).then(cache => {
+      caches.open(STATIC_CACHE).then(async cache => {
         console.log('Caching static assets');
-        return cache.addAll(urlsToCache);
+        for (const url of urlsToCache) {
+          try {
+            await cache.add(url);
+          } catch (error) {
+            console.warn('Failed to cache:', url, error);
+          }
+        }
       }),
       caches.open(DYNAMIC_CACHE),
       caches.open(AUDIO_CACHE),
@@ -77,10 +81,28 @@ self.addEventListener('fetch', (event) => {
 
 // Handle API requests
 async function handleApiRequest(event) {
+  // Don't cache POST requests
+  if (event.request.method === 'POST') {
+    return fetch(event.request);
+  }
+
   try {
+    const cache = await caches.open(API_CACHE);
+    const cachedResponse = await cache.match(event.request);
+    
+    if (cachedResponse) {
+      // Return cached response and fetch update in background
+      fetch(event.request).then(async response => {
+        if (response.ok) {
+          const clonedResponse = response.clone();
+          await cache.put(event.request, clonedResponse);
+        }
+      }).catch(console.error);
+      return cachedResponse;
+    }
+
     const response = await fetch(event.request);
     if (response.ok) {
-      const cache = await caches.open(API_CACHE);
       const clonedResponse = response.clone();
       await cache.put(event.request, clonedResponse);
     }

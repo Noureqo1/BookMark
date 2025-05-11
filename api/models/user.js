@@ -8,6 +8,14 @@ const userSchema = new mongoose.Schema({
     unique: true,
     trim: true,
   },
+  name: {
+    type: String,
+    required: true,
+    trim: true,
+    get: function() {
+      return this.name || this.username;
+    }
+  },
   email: {
     type: String,
     required: true,

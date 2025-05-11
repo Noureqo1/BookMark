@@ -88,35 +88,82 @@ router.delete('/:id', auth, isAdmin, async (req, res) => {
 });
 
 // User interactions
+// Get reviews for a book
+router.get('/:id/reviews', async (req, res) => {
+  try {
+    // First find all reviews and populate user data
+    const reviews = await Review.find({ book: req.params.id })
+      .populate({
+        path: 'user',
+        select: 'name email'
+      })
+      .sort({ createdAt: -1 });
+
+    // Update book's review stats
+    const book = await Book.findById(req.params.id);
+    if (book) {
+      const totalRating = reviews.reduce((sum, review) => sum + review.rating, 0);
+      book.averageRating = reviews.length > 0 ? totalRating / reviews.length : 0;
+      book.reviewCount = reviews.length;
+      await book.save();
+    }
+
+    res.json(reviews);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
 // Add review
-router.post('/:id/reviews', async (req, res) => {
+router.post('/:id/reviews', auth, async (req, res) => {
+  const { rating, comment } = req.body;
+
+  // Validate input
+  if (!rating || rating < 1 || rating > 5) {
+    return res.status(400).json({ error: 'Rating must be between 1 and 5' });
+  }
   try {
     const book = await Book.findById(req.params.id);
     if (!book) {
       return res.status(404).json({ error: 'Book not found' });
     }
 
+    // Check if user has already reviewed this book
+    const existingReview = await Review.findOne({
+      book: req.params.id,
+      user: req.user._id
+    });
+
+    if (existingReview) {
+      return res.status(400).json({ error: 'You have already reviewed this book' });
+    }
+
     const review = new Review({
       book: req.params.id,
       rating: req.body.rating,
       comment: req.body.comment,
-      userName: req.user ? req.user.name : 'Anonymous User',
-      user: req.user ? req.user._id : null
+      user: req.user._id
     });
 
     await review.save();
 
+    // Get the populated review
+    const populatedReview = await Review.findById(review._id)
+      .populate({
+        path: 'user',
+        select: 'name email'
+      });
+
     // Update book's average rating
     const reviews = await Review.find({ book: req.params.id });
     const totalRating = reviews.reduce((sum, item) => sum + item.rating, 0);
-    const averageRating = totalRating / reviews.length;
+    const averageRating = reviews.length > 0 ? totalRating / reviews.length : 0;
 
-    await Book.findByIdAndUpdate(req.params.id, { 
-      averageRating,
-      reviewCount: reviews.length
-    });
+    book.averageRating = averageRating;
+    book.reviewCount = reviews.length;
+    await book.save();
 
-    res.status(201).json(review);
+    res.status(201).json(populatedReview);
   } catch (error) {
     res.status(400).json({ error: error.message });
   }
