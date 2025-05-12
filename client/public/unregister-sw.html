@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Unregister Service Workers</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+    button {
+      padding: 10px 20px;
+      background-color: #4CAF50;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      margin-top: 20px;
+    }
+    #status {
+      margin-top: 20px;
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+    }
+  </style>
+</head>
+<body>
+  <h1>Service Worker Unregistration Tool</h1>
+  <p>This tool will unregister all service workers for this domain.</p>
+  <button id="unregister">Unregister All Service Workers</button>
+  <div id="status">Status: Ready</div>
+
+  <script>
+    document.getElementById('unregister').addEventListener('click', async () => {
+      const statusEl = document.getElementById('status');
+      statusEl.innerHTML = 'Checking for service workers...';
+      
+      if ('serviceWorker' in navigator) {
+        try {
+          const registrations = await navigator.serviceWorker.getRegistrations();
+          
+          if (registrations.length === 0) {
+            statusEl.innerHTML = 'No service workers found.';
+            return;
+          }
+          
+          statusEl.innerHTML = `Found ${registrations.length} service worker(s). Unregistering...`;
+          
+          let success = 0;
+          for (let registration of registrations) {
+            const result = await registration.unregister();
+            if (result) {
+              success++;
+            }
+          }
+          
+          statusEl.innerHTML = `Successfully unregistered ${success} of ${registrations.length} service worker(s).
+            <p>Please close all tabs of this site and reopen for changes to take effect.</p>`;
+            
+          // Clear browser caches
+          if ('caches' in window) {
+            const cacheNames = await caches.keys();
+            await Promise.all(
+              cacheNames.map(cacheName => caches.delete(cacheName))
+            );
+            statusEl.innerHTML += '<p>All caches have been cleared.</p>';
+          }
+        } catch (error) {
+          statusEl.innerHTML = `Error: ${error.message}`;
+        }
+      } else {
+        statusEl.innerHTML = 'Service Workers are not supported in this browser.';
+      }
+    });
+  </script>
+</body>
+</html>
