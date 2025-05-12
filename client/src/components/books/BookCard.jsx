@@ -39,13 +39,6 @@ const BookCard = ({ book }) => {
               <Headphones className="h-4 w-4 mr-2" />
               Listen Now
             </Link>
-            <Link 
-              to={`/books/${book._id}`}
-              className="w-full bg-white/90 hover:bg-white text-gray-800 font-medium py-2 rounded-lg flex items-center justify-center transition-colors duration-200"
-            >
-              <BookOpen className="h-4 w-4 mr-2" />
-              View Details
-            </Link>
             <button
               onClick={handleDownload}
               disabled={downloading || downloaded}
